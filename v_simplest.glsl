@@ -7,10 +7,12 @@ uniform mat4 M;
 
 //Atrybuty
 in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
+in vec4 colour;
+
+out vec4 iC;
 
 
 void main(void) {
-    vec4 v = vertex;
-    v.z = 0;
-    gl_Position=P*V*M*v;
+    gl_Position=P*V*M*vertex;
+    iC = colour;
 }

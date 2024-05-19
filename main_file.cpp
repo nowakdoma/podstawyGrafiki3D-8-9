@@ -130,10 +130,13 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 
     glEnableVertexAttribArray(sp->a("vertex"));  //Włącz przesyłanie danych do atrybutu vertex
     glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,vertices); //Wskaż tablicę z danymi dla atrybutu vertex
+	glEnableVertexAttribArray(sp->a("colour"));
+	glVertexAttribPointer(sp->a("colour"), 4, GL_FLOAT, false, 0, colors);
 
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
 
     glDisableVertexAttribArray(sp->a("vertex"));  //Wyłącz przesyłanie danych do atrybutu vertex
+	glDisableVertexAttribArray(sp->a("colours"));
 
     glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
 }
