@@ -14,5 +14,5 @@ out vec4 iC;
 
 void main(void) {
     gl_Position=P*V*M*vertex;
-    iC = colour;
+    iC = vertex;
 }
