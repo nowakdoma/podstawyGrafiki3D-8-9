@@ -10,5 +10,7 @@ in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
 
 
 void main(void) {
-    gl_Position=P*V*M*vertex;
+    vec4 v = vertex;
+    v.z = 0;
+    gl_Position=P*V*M*v;
 }
