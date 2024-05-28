@@ -133,7 +133,7 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 	glEnableVertexAttribArray(sp->a("colour"));
 	glVertexAttribPointer(sp->a("colour"), 4, GL_FLOAT, false, 0, colors);
 	glEnableVertexAttribArray(sp->a("normals"));
-	glVertexAttribPointer(sp->a("normals"), 4, GL_FLOAT, false, 0, normals);
+	glVertexAttribPointer(sp->a("normals"), 4, GL_FLOAT, false, 0, myTeapotVertexNormals);
 
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
 
