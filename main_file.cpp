@@ -41,19 +41,19 @@ ShaderProgram *sp;
 
 
 //Odkomentuj, żeby rysować kostkę
-float* vertices = myCubeVertices;
-float* normals = myCubeNormals;
-float* texCoords = myCubeTexCoords;
-float* colors = myCubeColors;
-int vertexCount = myCubeVertexCount;
+//float* vertices = myCubeVertices;
+//float* normals = myCubeNormals;
+//float* texCoords = myCubeTexCoords;
+//float* colors = myCubeColors;
+//int vertexCount = myCubeVertexCount;
 
 
 //Odkomentuj, żeby rysować czajnik
-//float* vertices = myTeapotVertices;
-//float* normals = myTeapotNormals;
-//float* texCoords = myTeapotTexCoords;
-//float* colors = myTeapotColors;
-//int vertexCount = myTeapotVertexCount;
+float* vertices = myTeapotVertices;
+float* normals = myTeapotNormals;
+float* texCoords = myTeapotTexCoords;
+float* colors = myTeapotColors;
+int vertexCount = myTeapotVertexCount;
 
 
 
@@ -132,11 +132,14 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
     glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,vertices); //Wskaż tablicę z danymi dla atrybutu vertex
 	glEnableVertexAttribArray(sp->a("colour"));
 	glVertexAttribPointer(sp->a("colour"), 4, GL_FLOAT, false, 0, colors);
+	glEnableVertexAttribArray(sp->a("normals"));
+	glVertexAttribPointer(sp->a("normals"), 4, GL_FLOAT, false, 0, normals);
 
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
 
     glDisableVertexAttribArray(sp->a("vertex"));  //Wyłącz przesyłanie danych do atrybutu vertex
 	glDisableVertexAttribArray(sp->a("colours"));
+	glDisableVertexAttribArray(sp->a("normals"));
 
     glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
 }
