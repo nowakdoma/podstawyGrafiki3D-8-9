@@ -25,7 +25,16 @@ void main(void) {
     vec4 La = vec4(0.0, 0.0, 0.0, 1.0);
     vec4 Ld = vec4(1.0, 1.0, 1.0, 1.0);
 
-    iC = Ld * colour * nl;
+    vec4 r = normalize(reflect(-l, n));
+    vec4 v = normalize(-V * M * vertex);
+
+    float rv = max(dot(r, v), 0.0);
+    rv = pow(rv, 25.0);
+
+    vec4 Ls = vec4(1.0, 1.0, 1.0, 1.0); 
+    vec4 ks = vec4(1.0, 1.0, 1.0, 1.0); 
+
+    iC = (Ld * colour * nl) + (Ls * ks * rv);
  
     gl_Position = P * V * M * vertex;
 }
