@@ -112,8 +112,10 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glfwSetKeyCallback(window,keyCallback);
 
 	sp=new ShaderProgram("v_simplest.glsl",NULL,"f_simplest.glsl");
-	tex0 = readTexture("metal.png");
-	tex1 = readTexture("sky.png");
+	tex0 = readTexture("fur.png");
+	tex1 = readTexture("tiger.png");
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 }
 
@@ -136,7 +138,7 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 V=glm::lookAt(
-         glm::vec3(0, 0, -5),
+         glm::vec3(0, 0, -3),
          glm::vec3(0,0,0),
          glm::vec3(0.0f,1.0f,0.0f)); //Wylicz macierz widoku
 
@@ -153,6 +155,8 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
     glUniformMatrix4fv(sp->u("M"),1,false,glm::value_ptr(M));
 	glUniform1i(sp->u("textureMap0"), 1);
 	glUniform1i(sp->u("textureMap1"), 2);
+	glUniform1f(sp->u("maxFurLength"), 0.1);
+	glUniform1f(sp->u("maxLayer"), 100);
 
     glEnableVertexAttribArray(sp->a("vertex"));  //Włącz przesyłanie danych do atrybutu vertex
     glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,vertices); //Wskaż tablicę z danymi dla atrybutu vertex
@@ -168,7 +172,7 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 	glActiveTexture(GL_TEXTURE2);
 	glBindTexture(GL_TEXTURE_2D, tex1);
 
-    glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
+	glDrawArraysInstanced(GL_TRIANGLES, 0, vertexCount, 100);
 
     glDisableVertexAttribArray(sp->a("vertex"));  //Wyłącz przesyłanie danych do atrybutu vertex
 	glDisableVertexAttribArray(sp->a("colours"));
