@@ -39,6 +39,7 @@ float aspectRatio=1;
 
 ShaderProgram *sp;
 GLuint tex0;
+GLuint tex1;
 
 
 //Odkomentuj, żeby rysować kostkę
@@ -112,6 +113,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 
 	sp=new ShaderProgram("v_simplest.glsl",NULL,"f_simplest.glsl");
 	tex0 = readTexture("metal.png");
+	tex1 = readTexture("metal_spec.png");
+
 }
 
 
@@ -119,6 +122,8 @@ void initOpenGLProgram(GLFWwindow* window) {
 void freeOpenGLProgram(GLFWwindow* window) {
     //************Tutaj umieszczaj kod, który należy wykonać po zakończeniu pętli głównej************
 
+	glDeleteTextures(1, &tex0);
+	glDeleteTextures(1, &tex1);
     delete sp;
 }
 
@@ -147,6 +152,7 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
     glUniformMatrix4fv(sp->u("V"),1,false,glm::value_ptr(V));
     glUniformMatrix4fv(sp->u("M"),1,false,glm::value_ptr(M));
 	glUniform1i(sp->u("textureMap0"), 1);
+	glUniform1i(sp->u("textureMap1"), 2);
 
     glEnableVertexAttribArray(sp->a("vertex"));  //Włącz przesyłanie danych do atrybutu vertex
     glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,vertices); //Wskaż tablicę z danymi dla atrybutu vertex
@@ -159,6 +165,8 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, tex0);
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, tex1);
 
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
 
