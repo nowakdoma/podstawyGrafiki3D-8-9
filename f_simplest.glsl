@@ -6,7 +6,7 @@ in vec4 nfarg;
 in vec4 vfarg;
 in vec2 iTexCoord0;
 
-out vec4 pixelColor; //Zmienna wyjsciowa fragment shadera. Zapisuje sie do niej ostateczny (prawie) kolor piksela
+out vec4 pixelColor; // Zmienna wyjsciowa fragment shadera. Zapisuje sie do niej ostateczny (prawie) kolor piksela
 
 uniform sampler2D textureMap0;
 
@@ -25,10 +25,13 @@ void main(void) {
     float rv = max(dot(r, v), 0.0);
     rv = pow(rv, 25.0);
 
-    vec4 Ls = vec4(1.0, 1.0, 1.0, 1.0); 
-    vec4 ks = vec4(1.0, 1.0, 1.0, 1.0); 
+    vec4 texColor = texture(textureMap0, iTexCoord0);
 
-    vec4 texColor=texture(textureMap0,iTexCoord0);
+    vec4 kd = texColor;
+    vec4 ks = kd / 3.0;
 
-    pixelColor = (Ld * texColor * nl) + (Ls * ks * rv);
+    vec4 Ls = vec4(1.0, 1.0, 1.0, 1.0);
+
+    // Finalny kolor piksela
+    pixelColor = (Ld * kd * nl) + (Ls * ks * rv);
 }
