@@ -113,7 +113,7 @@ void initOpenGLProgram(GLFWwindow* window) {
 
 	sp=new ShaderProgram("v_simplest.glsl",NULL,"f_simplest.glsl");
 	tex0 = readTexture("metal.png");
-	tex1 = readTexture("metal_spec.png");
+	tex1 = readTexture("sky.png");
 
 }
 
