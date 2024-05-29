@@ -23,26 +23,24 @@ out vec2 iTexCoord1;
 out float layer; // Aktualna warstwa
 
 void main(void) {
-    // Przekazywanie koloru
     iC = colour;
 
-    // Pozycja œwiat³a
     vec4 lp = vec4(0, 0, -6, 1);
 
-    // Obliczanie wektora œwiat³a, normalnej i widoku
     lfrag = V * lp - V * M * vertex; 
     nfrag = V * M * normals;
     vfrag = -V * M * vertex;
 
-    // Obliczanie wspó³rzêdnych teksturowania
     iTexCoord0 = texCoord0;
     vec4 n = normalize(nfrag);
     iTexCoord1 = (n.xy + 1) / 2;
 
-    // Wyliczanie nowej wspó³rzêdnej wierzcho³ka dla konkretnej warstwy
     layer = float(gl_InstanceID); // Numer warstwy, to numer kopii
     vec4 nv = vertex + (layer * maxFurLength / maxLayer) * normalize(normals);
 
-    // Obliczanie pozycji wierzcho³ka w przestrzeni clip
+    vec4 vGravity=vec4(0,-0.08,0,0);
+    vGravity=inverse(M)*vGravity;
+    nv=nv+vGravity*pow(layer/maxLayer,2);
+
     gl_Position = P * V * M * nv;
 }
