@@ -38,6 +38,7 @@ float speed_y=0;
 float aspectRatio=1;
 
 ShaderProgram *sp;
+GLuint tex0;
 
 
 //Odkomentuj, żeby rysować kostkę
@@ -55,7 +56,24 @@ float* texCoords = myTeapotTexCoords;
 float* colors = myTeapotColors;
 int vertexCount = myTeapotVertexCount;
 
-
+GLuint readTexture(const char* filename) {
+	GLuint tex;
+	glActiveTexture(GL_TEXTURE0);
+	//Wczytanie do pamięci komputera
+	std::vector<unsigned char> image; //Alokuj wektor do wczytania obrazka
+	unsigned width, height; //Zmienne do których wczytamy wymiary obrazka
+	//Wczytaj obrazek
+	unsigned error = lodepng::decode(image, width, height, filename);
+	//Import do pamięci karty graficznej
+	glGenTextures(1, &tex); //Zainicjuj jeden uchwyt
+	glBindTexture(GL_TEXTURE_2D, tex); //Uaktywnij uchwyt
+	//Wczytaj obrazek do pamięci KG skojarzonej z uchwytem
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	return tex;
+}
 
 //Procedura obsługi błędów
 void error_callback(int error, const char* description) {
@@ -93,6 +111,7 @@ void initOpenGLProgram(GLFWwindow* window) {
 	glfwSetKeyCallback(window,keyCallback);
 
 	sp=new ShaderProgram("v_simplest.glsl",NULL,"f_simplest.glsl");
+	tex0 = readTexture("metal.png");
 }
 
 
@@ -127,6 +146,7 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
     glUniformMatrix4fv(sp->u("P"),1,false,glm::value_ptr(P));
     glUniformMatrix4fv(sp->u("V"),1,false,glm::value_ptr(V));
     glUniformMatrix4fv(sp->u("M"),1,false,glm::value_ptr(M));
+	glUniform1i(sp->u("textureMap0"), 1);
 
     glEnableVertexAttribArray(sp->a("vertex"));  //Włącz przesyłanie danych do atrybutu vertex
     glVertexAttribPointer(sp->a("vertex"),4,GL_FLOAT,false,0,vertices); //Wskaż tablicę z danymi dla atrybutu vertex
@@ -134,12 +154,18 @@ void drawScene(GLFWwindow* window,float angle_x,float angle_y) {
 	glVertexAttribPointer(sp->a("colour"), 4, GL_FLOAT, false, 0, colors);
 	glEnableVertexAttribArray(sp->a("normals"));
 	glVertexAttribPointer(sp->a("normals"), 4, GL_FLOAT, false, 0, myTeapotVertexNormals);
+	glEnableVertexAttribArray(sp->a("texCoord0"));
+	glVertexAttribPointer(sp->a("texCoord0"), 2, GL_FLOAT, false, 0, texCoords);
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, tex0);
 
     glDrawArrays(GL_TRIANGLES,0,vertexCount); //Narysuj obiekt
 
     glDisableVertexAttribArray(sp->a("vertex"));  //Wyłącz przesyłanie danych do atrybutu vertex
 	glDisableVertexAttribArray(sp->a("colours"));
 	glDisableVertexAttribArray(sp->a("normals"));
+	glDisableVertexAttribArray(sp->a("texCoord0"));
 
     glfwSwapBuffers(window); //Przerzuć tylny bufor na przedni
 }

@@ -9,12 +9,13 @@ uniform mat4 M;
 in vec4 vertex; //wspolrzedne wierzcholka w przestrzeni modelu
 in vec4 colour;
 in vec4 normals;
+in vec2 texCoord0;
 
 out vec4 iC;
 out vec4 lfarg;
 out vec4 nfarg;
 out vec4 vfarg;
-
+out vec2 iTexCoord0;
 
 
 void main(void) {
@@ -25,6 +26,8 @@ void main(void) {
     lfarg = V * lp - V * M * vertex; 
     nfarg = V * M * normals;
     vfarg = -V * M * vertex;
+
+    iTexCoord0=texCoord0;
 
     gl_Position = P * V * M * vertex;
 }
